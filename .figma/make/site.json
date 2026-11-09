@@ -1,0 +1,10 @@
+{
+  "description": "Discover and reserve tables at Mesa Dragón, a board game café offering over 60 games, specialty coffee, and artisanal food in a cozy medieval tavern setting.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

@@ -1,0 +1,282 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Pirata+One&family=Quicksand:wght@500;600;700&display=swap");
+@import "tailwindcss";
+
+:root {
+  --bg: #1b1114;
+  --card: #26191d;
+  --text: #dfc8a0;
+  --muted: #b9a583;
+  --gold: #dda14e;
+  --gold-bright: #f4c542;
+  --label: #E63946;
+  --wine: #6b1a30;
+  --booking: #443462;
+  --field: #32264d;
+  --green: #2f4638;
+  --pressed: #9a3f1f;
+  --line: #4a3a3e;
+  --easy: #8bc08a;
+  --medium: #f4c542;
+  --medium-hard: #e8893a;
+  --hard: #e04b54;
+  color: var(--text);
+  background: var(--bg);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-synthesis: none;
+  scroll-behavior: smooth;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; background: #100a0c; }
+button, input, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 3px; }
+button { color: inherit; }
+a { color: inherit; text-decoration: none; }
+p, h1, h2, h3 { margin: 0; }
+.appShell { width: 100%; max-width: 430px; min-height: 100vh; margin: 0 auto; background: var(--bg); overflow: hidden; box-shadow: 0 0 70px #0009; }
+
+.header { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  width: 100%;
+  max-width: 430px; 
+  margin: 0 auto; 
+  z-index: 30; 
+  height: 70px; 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  padding: 0 18px; 
+  background: transparent;
+  border-bottom: 1px solid transparent; 
+  transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.header.scrolled {
+  background: rgba(27, 17, 20, 0.85);
+  border-bottom: 1px solid rgba(58, 39, 44, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+.dragonMarkImage {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+.gameArt {
+  overflow: hidden; /* Corta los bordes sobrantes */
+}
+
+.gameThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta la imagen al contenedor sin distorsionarla */
+  border-radius: 10px;
+}
+
+.header nav { display: none; }
+.logoLink { min-width: 0; margin-right: auto; }
+.brand { display: flex; align-items: center; gap: 12px; text-align: left; }
+.brand strong { display: block; font-family: "Pirata One", serif; font-size: 25px; font-weight: 400; line-height: .85; letter-spacing: .3px; }
+.brand small { display: block; margin-top: 5px; color: var(--muted); font-family: "Cinzel", serif; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; text-align: center;}
+.brandCompact { gap: 8px; }
+.brandCompact strong { font-size: 20px; white-space: nowrap; }
+.star { width: 42px; height: 42px; flex: 0 0 auto; display: inline-grid; place-items: center; background: var(--gold); color: var(--bg); clip-path: polygon(50% 0, 61% 29%, 85% 15%, 71% 39%, 100% 50%, 71% 61%, 85% 85%, 61% 71%, 50% 100%, 39% 71%, 15% 85%, 29% 61%, 0 50%, 29% 39%, 15% 15%, 39% 29%); }
+.star span { font-size: 20px; }
+.starSmall { width: 30px; height: 30px; }
+.starSmall span { font-size: 14px; }
+
+.button { min-height: 52px; width: 100%; display: inline-flex; align-items: center; justify-content: center; border-radius: 14px; padding: 0 20px; border: 2px solid transparent; cursor: pointer; font-weight: 700; transition: transform .18s, background .18s, color .18s, border-color .18s; }
+.button:hover { transform: translateY(-2px); }
+.button:active { transform: translateY(0); background: var(--pressed); color: white; }
+.button.primary { background: var(--gold); color: var(--bg); }
+.button.secondary { background: transparent; border-color: var(--text); color: var(--text); }
+.button.quiet { min-height: 44px; background: transparent; color: var(--text); }
+.button:disabled { cursor: not-allowed; color: #a99ab8; border: 2px dashed #8e80a2; background: transparent; transform: none; opacity: .7; }
+.headerButton { min-height: 40px; width: auto; padding: 0 13px; border-radius: 11px; font-size: 12px; white-space: nowrap; }
+
+.heroImage { position: relative; height: 380px; background: var(--bg); }
+.heroBackground { position: absolute; z-index: 0; inset: 0; background-position: center 45%; background-size: cover; opacity: 0; transition: opacity 0.6s ease-in-out; }
+.heroBackground.active { opacity: 1; }
+.heroImage::after { content: ""; position: absolute; z-index: 1; inset: 0; background: radial-gradient(circle at 50% 40%, #100a0c22 15%, var(--bg) 100%), linear-gradient(180deg, #100a0c88 0%, #100a0c55 40%, var(--bg) 100%); pointer-events: none; }
+.heroLogo { position: absolute; z-index: 2; inset: 50px 20px auto; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.heroLogo .brand { flex-direction: column; }
+.heroLogo .brand strong { font-size: 43px; text-shadow: 0 3px 20px #000; }
+.heroLogo .brand small { font-size: 10px; }
+.dragonMark { width: 92px; height: 92px; display: grid; place-items: center; border: 2px solid var(--label); border-radius: 50% 50% 45% 55%; color: var(--label); font: 68px/1 "Pirata One"; transform: rotate(-5deg); text-shadow: 3px 3px 0 #501220; box-shadow: inset 0 0 30px #0008, 0 6px 25px #0008; }
+.status { position: absolute; z-index: 2; left: 50%; bottom: 32px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; width: max-content; max-width: calc(100% - 32px); padding: 9px 13px; border-radius: 99px; background: #35272bcc; color: var(--text); border: 1px solid #6b565c; font-size: 12px; backdrop-filter: blur(6px); }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--label); box-shadow: 0 0 10px currentColor; }
+.status.isOpen { background: #2f4638e8; border-color: #627c6c; }
+.status.isOpen i { background: var(--easy); }
+.heroContent { margin-top: -12px; position: relative; z-index: 3; padding: 0 24px 46px; background: linear-gradient(180deg, var(--bg) 0%, var(--wine) 100%); text-align: center; }
+.eyebrow, .sectionTitle > span { display: block; color: var(--label); font-family: "Cinzel", serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+.heroContent h1 { margin: 9px 0 14px; font: 400 48px/.95 "Pirata One", serif; letter-spacing: .5px; }
+.heroContent p.heroPromise { margin: 0 auto 10px; color: var(--gold-bright); font: 700 14px "Cinzel", serif; }
+.heroContent p { max-width: 340px; margin: 0 auto 24px; color: var(--muted); font-size: 15px; line-height: 1.65; }
+.heroLinks { display: flex; justify-content: center; gap: 38px; margin-top: 24px; }
+.heroLinks a { padding: 8px 0; border-bottom: 1px solid var(--line); font: 700 11px "Cinzel", serif; text-transform: uppercase; letter-spacing: .8px; }
+.heroLinks span { margin-left: 5px; color: var(--gold); }
+
+.section { padding: 64px 22px; scroll-margin-top: 69px; }
+.sectionTitle { text-align: center; }
+.sectionTitle h2 { margin-top: 5px; font: 400 39px/1.05 "Pirata One", serif; }
+.titleRule { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 13px auto 0; }
+.titleRule i { width: 48px; height: 1px; background: var(--gold); opacity: .6; }
+.titleRule .star { width: 18px; height: 18px; }
+.titleRule .star span { font-size: 8px; }
+.sectionTitle.light > span { color: #f5a2aa; }
+.sectionIntro { margin: 13px auto 30px; max-width: 310px; text-align: center; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.sectionIntro strong {
+  color: var(--gold, #d4af37);
+  font-weight: 600;
+}
+
+.experience { background: var(--wine); padding-top: 55px; padding-bottom: 55px; border-bottom: 1px solid #8a3248; }
+.featureList { display: grid; gap: 28px; margin-top: 38px; }
+.featureList article { display: flex; gap: 16px; align-items: flex-start; }
+.featureIcon { width: 48px; height: 48px; flex: 0 0 auto; display: grid; place-items: center; color: var(--gold-bright); border: 1px solid #b95e70; border-radius: 50%; background: #571427; }
+.featureList h3 { font-family: "Cinzel", serif; font-size: 14px; line-height: 1.35; }
+.featureList p { margin-top: 6px; color: #d4bca8; font-size: 13px; line-height: 1.55; }
+
+.search { height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 15px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); color: var(--muted); }
+.search:focus-within { border-color: var(--gold-bright); }
+.search input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--text); }
+.search input::placeholder { color: #8f7a6e; }
+.filter { margin-top: 23px; }
+.filter > span, .bookingBlock > span, label > span, .peopleField > span { display: block; margin-bottom: 10px; font: 700 13px "Cinzel", serif; letter-spacing: 1.2px; text-transform: uppercase; }
+.bookingSearchLabel { display: block; margin-bottom: 8px; color: #c9bede; font: 700 13px "Cinzel", serif; }
+.scrollChips, .timeChips, .gameSelect { display: flex; gap: 8px; overflow-x: auto; padding: 3px 3px 7px; margin: 0 -3px; scrollbar-width: none; }
+.scrollChips::-webkit-scrollbar, .gameSelect::-webkit-scrollbar { display: none; }
+.chip { min-height: 44px; flex: 0 0 auto; padding: 0 15px; border: 1px solid var(--line); border-radius: 99px; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 700; transition: all .16s; }
+.chip:hover { border-color: var(--text); color: var(--text); }
+.chip:active { background: var(--pressed); border-color: var(--pressed); color: white; }
+.chip.active { background: var(--text); border-color: var(--text); color: var(--bg); }
+.resultCount { display: flex; align-items: center; gap: 12px; margin: 30px 0 13px; color: var(--muted); font: 700 13px "Cinzel"; letter-spacing: 1px; text-transform: uppercase; }
+.resultCount i { flex: 1; height: 1px; background: var(--line); }
+.gameList { display: grid; gap: 10px; }
+.gameCard { width: 100%; min-height: 104px; display: flex; align-items: center; gap: 14px; padding: 15px; border: 1px solid #3e2b30; border-radius: 16px; background: var(--card); text-align: left; cursor: pointer; transition: border-color .2s, transform .2s, background .2s; }
+.gameCard:hover { border-color: #765861; transform: translateY(-2px); }
+.gameCard:active { background: #321c22; transform: translateY(0); }
+.gameArt { width: 72px; height: 72px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 12px; background: radial-gradient(circle, #6b1a30, #381820 70%); border: 1px solid #753045; }
+.gameArt .star { width: 34px; height: 34px; }
+.gameMain { min-width: 0; flex: 1; }
+.gameMain h3, .menuCard h3 { overflow: hidden; text-overflow: ellipsis; font: 700 13px/1.35 "Cinzel", serif; }
+.gameMeta { display: flex; flex-wrap: wrap; gap: 7px 11px; margin-top: 10px; color: var(--muted); font-size: 13px; }
+.gameMeta span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.difficulty i { width: 7px; height: 7px; display: inline-block; border-radius: 50%; background: currentColor; box-shadow: 0 0 7px currentColor; }
+.difficulty.easy { color: var(--easy); }.difficulty.medium { color: var(--medium); }.difficulty.mediumHard { color: var(--medium-hard); }.difficulty.hard { color: var(--hard); }.difficulty.unknown { color: var(--muted); }
+.cardArrow { color: var(--gold); font-size: 26px; font-weight: 400; }
+.empty { padding: 40px 24px; border: 1px dashed var(--line); border-radius: 18px; text-align: center; background: var(--card); }
+.empty h3 { margin-top: 18px; font: 700 16px/1.4 "Cinzel"; }
+.empty p { margin: 9px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+.menuSection { background: #211519; }
+.menuSection > .scrollChips { margin-top: 30px; }
+.menuList { display: grid; gap: 10px; margin-top: 18px; }
+.menuCard { min-height: 106px; display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; padding: 18px; border-radius: 15px; background: var(--card); border: 1px solid #3e2b30; }
+.menuCopy { flex: 1; }
+.menuCard p { margin: 7px 0 10px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.menuCard > strong { color: var(--gold); font: 700 15px "Cinzel"; white-space: nowrap; }
+.foodTag { display: inline-block; padding: 5px 9px; border-radius: 99px; color: #bbdcc3; background: var(--green); font-size: 10px; }
+.allergy { display: flex; align-items: center; gap: 10px; margin-top: 22px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.allergy span { width: 24px; height: 24px; display: grid; place-items: center; flex: 0 0 auto; border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); }
+
+.locationCard { overflow: hidden; margin-top: 32px; border: 1px solid #473239; border-radius: 18px; background: var(--card); }
+.mapPattern { height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--gold); background-color: #35272b; background-image: linear-gradient(30deg, #443237 12%, transparent 12.5%, transparent 87%, #443237 87.5%), linear-gradient(150deg, #443237 12%, transparent 12.5%, transparent 87%, #443237 87.5%); background-size: 32px 55px; }
+.mapPattern span { padding: 6px 10px; background: var(--wine); color: var(--text); border-radius: 5px; font: 700 10px "Cinzel"; }
+.locationDetails { display: grid; gap: 20px; padding: 22px; }
+.locationDetails > div { display: flex; gap: 13px; color: var(--gold); }
+.locationDetails p { color: var(--text); font-size: 13px; line-height: 1.6; }
+.locationDetails small { color: var(--muted); }
+.followLabel { margin: 28px 0 12px; text-align: center; color: var(--muted); font: 700 10px "Cinzel"; letter-spacing: 1.3px; text-transform: uppercase; }
+.socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 25px; }
+.socials a { min-height: 40px; display: inline-flex; align-items: center; padding: 0 13px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); font-size: 11px; }
+.socials a:hover { border-color: var(--gold); color: var(--text); }
+.reviewsSection { background: #211519; border-top: 1px solid #3e2b30; }
+.googleRating { width: fit-content; margin: 22px auto 26px; padding: 10px 15px; border: 1px solid var(--gold); border-radius: 99px; background: var(--card); color: var(--text); font-size: 14px; font-weight: 700; }
+.googleRating span { margin-right: 4px; }
+.reviewsGrid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.reviewCard { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+.reviewCardHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.reviewCardHeader strong { color: var(--text); font: 700 14px "Cinzel", serif; }
+.reviewCardHeader time { flex: 0 0 auto; color: var(--muted); font-size: 12px; }
+.reviewStars { margin-top: 10px; color: var(--gold); font-size: 16px; letter-spacing: 2px; }
+.reviewText { display: -webkit-box; margin-top: 10px; overflow: hidden; color: var(--muted); font-size: 14px; line-height: 1.6; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.reviewText.expanded { display: block; overflow: visible; }
+.reviewExpandButton { margin-top: 8px; padding: 4px 0; border: 0; background: transparent; color: var(--gold); cursor: pointer; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.reviewsEmpty { max-width: 340px; margin: 0 auto; color: var(--muted); font-size: 14px; line-height: 1.6; text-align: center; }
+.reviewsButton { display: flex; width: fit-content; max-width: 100%; margin: 24px auto 0; text-align: center; }
+footer { display: flex; flex-direction: column; align-items: center; padding: 46px 20px; border-top: 1px solid #3a272c; text-align: center; }
+footer strong { margin-top: 14px; font: 400 27px "Pirata One"; }
+footer > span { color: var(--muted); font: 700 9px "Cinzel"; letter-spacing: 1.6px; text-transform: uppercase; }
+footer p { margin-top: 25px; color: #7f6d66; font-size: 11px; }
+
+.modalBackdrop { position: fixed; z-index: 100; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-top: 60px; background: #090507c9; backdrop-filter: blur(3px); animation: fade .2s ease; }
+.sheet { position: relative; width: min(430px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 36px 22px 26px; border-radius: 24px 24px 0 0; background: var(--card); box-shadow: 0 -20px 60px #0008; animation: slide .28s ease; }
+.bookingSheet { background: var(--booking); }
+.sheetHandle { position: absolute; top: 10px; left: 50%; width: 52px; height: 12px; transform: translateX(-50%); border-radius: 99px; background: linear-gradient(#ffffff55, #ffffff55) center / 42px 4px no-repeat; cursor: grab; touch-action: none; }
+.sheetHandle:active { cursor: grabbing; }
+.closeButton { position: absolute; top: 19px; right: 18px; width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #ffffff12; cursor: pointer; }
+.closeButton:hover { background: #ffffff20; }
+.sheet h2 { max-width: calc(100% - 40px); margin: 7px 0 6px; font: 400 37px/1.05 "Pirata One"; }
+.sheetGameArt { height: 124px; display: grid; place-items: center; margin: -36px -22px 26px; background: radial-gradient(circle, #7f2340, #37171f); }
+.sheetGameArt .star { width: 60px; height: 60px; }
+.detailGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 22px 0; }
+.detailGrid > div { min-height: 86px; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 13px; border-radius: 12px; background: var(--bg); }
+.detailGrid span, .detailLabel { color: var(--muted); font: 700 9px "Cinzel"; letter-spacing: 1px; text-transform: uppercase; }
+.detailGrid strong { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.detailGrid small { color: var(--muted); font-size: 10px; }
+.genreChips { display: flex; flex-wrap: wrap; gap: 7px; margin: 9px 0 22px; }
+.genreChips span { padding: 7px 11px; border: 1px solid var(--line); border-radius: 99px; color: var(--text); font-size: 11px; }
+.gameDescription { margin: 9px 0 24px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+
+.sheetIntro { margin-bottom: 24px; color: #c9bede; font-size: 13px; line-height: 1.55; }
+.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 10px; }
+.formGrid label:first-child, .formGrid label:nth-child(2) { grid-column: span 2; }
+label input, label textarea { width: 100%; min-height: 50px; padding: 0 13px; border: 1px solid #685b81; border-radius: 12px; outline: 0; background: var(--field); color: #f0e4cd; }
+label textarea { min-height: 88px; padding-top: 13px; resize: vertical; }
+label input::placeholder, label textarea::placeholder { color: #a99aba; }
+label input:focus, label textarea:focus { border-color: var(--gold-bright); box-shadow: 0 0 0 2px #f4c54233; }
+.peopleField > div { height: 50px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #685b81; border-radius: 12px; background: var(--field); }
+.peopleField button { width: 42px; align-self: stretch; border: 0; background: transparent; color: var(--text); font-size: 22px; cursor: pointer; }
+.peopleField button:disabled { color: #766989; }
+.peopleField strong { font-size: 17px; }
+.peopleField small { color: var(--label); font-size: 9px; }
+.error { display: block; margin-top: 6px; color: #ffc2c7; font-size: 10px; }
+.bookingBlock { margin: 20px 0; }
+.timeChips { display: grid; grid-template-columns: repeat(2, 1fr); overflow: visible; }
+.timeChips .chip { width: 100%; }
+.customTime { display: block; margin-top: 14px; }
+.bookingTimeInput { color-scheme: dark; }
+.bookingGameSearch { height: 46px; margin-bottom: 10px; background: var(--field); border-color: #685b81; }
+.gameSearchEmpty { padding: 10px 0; color: #c9bede; font-size: 12px; }
+.gameSelect { max-height: 112px; flex-wrap: wrap; overflow-y: auto; }
+.gameSelect .chip { min-height: 38px; font-size: 13px; }
+.gameSelect .limitReached { opacity: .45; }
+.bookingSummary { display: grid; gap: 8px; margin: 22px 0 16px; padding: 15px; border: 1px solid #6f6287; border-radius: 12px; background: #392d51; }
+.bookingSummary p { display: flex; justify-content: space-between; gap: 15px; color: #c9bede; font-size: 11px; }
+.bookingSummary strong { max-width: 70%; color: var(--text); text-align: right; }
+.requiredNote { margin-top: 8px; color: #c9bede; text-align: center; font-size: 10px; }
+.bookingTerms { margin-top: 14px; color: #d8cee8; font-size: 13px; line-height: 1.5; text-align: center; }
+.successState { padding: 32px 0 8px; text-align: center; }
+.successState .star { margin-bottom: 20px; }
+.successState h2 { max-width: 360px; margin: 8px auto 25px; }
+.successState .bookingSummary { text-align: left; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes slide { from { transform: translateY(40px); opacity: 0; } }
+
+@media (min-width: 900px) {
+  body { background: radial-gradient(circle at 50% 10%, #392127, #100a0c 60%); }
+  .appShell { max-width: 430px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}
