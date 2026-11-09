@@ -56,7 +56,7 @@ const games: Game[] = ([
   { name: "Scythe", image: "/juegos/Scythe.jpg", minPlayers: 1, maxPlayers: 5, players: "1–5", minMinutes: 90, maxMinutes: 115, time: "90–115 min", difficulty: "Medio-difícil", genres: ["Estrategia", "Aventura"], age: "14+", description: "Lidera una facción en una Europa alternativa y equilibra expansión, producción y poder militar." },
   { name: "Gloomhaven", image: "/juegos/Gloomhaven.jpg", minPlayers: 1, maxPlayers: 4, players: "1–4", minMinutes: 60, maxMinutes: 120, time: "60–120 min", difficulty: "Difícil", genres: ["Cooperativo", "Aventura", "Rol"], age: "14+", description: "Una campaña cooperativa de decisiones, combates tácticos y personajes que evolucionan." },
   { name: "Dungeons & Dragons (campaña)", image:"/juegos/Dungeons&Dragons.jpg",minPlayers: 3, maxPlayers: 6, players: "3–6", minMinutes: 180, maxMinutes: 240, time: "180–240 min", difficulty: "Difícil", genres: ["Rol", "Aventura"], age: "12+", description: "Crea un personaje y vive una historia compartida donde cada decisión puede cambiar la aventura." },
-]).map((game) => ({ ...game, image: assetUrl(game.image) }));
+] satisfies Game[]).map((game) => ({ ...game, image: assetUrl(game.image) }));
 
 const menuGroups = {
   "Pizzas": [
@@ -142,8 +142,8 @@ function getOpenStatus() {
   const minute = Number(parts.find((p) => p.type === "minute")?.value ?? 0);
   const isMonday = day === "Mon";
   const current = hour * 60 + minute;
-  const open = !isMonday && current >= 16 * 60 && current < 23 * 60 + 30;
-  if (open) return { open: true, label: "Abierto ahora · cierra a las 23:30" };
+  const open = !isMonday && current >= 16 * 60 && current < 23 * 60;
+  if (open) return { open: true, label: "Abierto ahora · cierra a las 23:00" };
   if (isMonday) return { open: false, label: "Cerrado · abre martes a las 16:00" };
   if (current < 16 * 60) return { open: false, label: "Cerrado · abre hoy a las 16:00" };
   return { open: false, label: day === "Sun" ? "Cerrado · abre martes a las 16:00" : "Cerrado · abre mañana a las 16:00" };
@@ -258,7 +258,7 @@ function App() {
           <span className="eyebrow">Tu nueva mesa favorita</span>
           <h1>Te enseñamos<br />a jugar.</h1>
           <p className="heroPromise">Juega, descubre y comparte.</p>
-          <p>Más de 260 juegos seleccionados, café y comida artesanal, en un solo lugar.</p>
+          <p>Más de 260 juegos de mesa, amigos y comida en un solo lugar</p>
           <Button onClick={() => openBooking()}>Reservar una mesa</Button>
           <div className="heroLinks"><a href="#juegos">Ver juegos <span>↓</span></a><a href="#menu">Ver menú <span>↓</span></a></div>
         </div>
@@ -267,9 +267,9 @@ function App() {
       <section id="experiencia" className="experience section">
         <SectionTitle eyebrow="La experiencia" light>Tu aventura empieza aquí</SectionTitle>
         <div className="featureList">
-          <article><div className="featureIcon"><Icon name="book" size={26} /></div><div><h3>Te enseñamos a jugar</h3><p>Nuestros anfitriones te enseñan las reglas para que solo tengas que disfrutar.</p></div></article>
-          <article><div className="featureIcon"><Icon name="users" size={26} /></div><div><h3>Para grupos de hasta 12 personas</h3><p>Parejas, amigos o campañas de rol: preparamos la mesa para tu grupo.</p></div></article>
-          <article><div className="featureIcon"><Icon name="clock" size={26} /></div><div><h3>Rápidas, estratégicas y largas</h3><p>Desde partidas de 15 minutos hasta estrategia compleja para toda la noche.</p></div></article>
+          <article><div className="featureIcon"><Icon name="book" size={26} /></div><div><h3>Te enseñamos a jugar</h3><p>Nuestros escuderos te enseñan las reglas para que solo tengas que disfrutar.</p></div></article>
+          <article><div className="featureIcon"><Icon name="users" size={26} /></div><div><h3>Para grupos de dos o más personas</h3><p>Parejas, familia o amigos: preparamos la mesa para tu grupo.</p></div></article>
+          <article><div className="featureIcon"><Icon name="clock" size={26} /></div><div><h3>Rápidas, estratégicas o largas</h3><p>Desde partidas de 15 minutos hasta estrategia compleja para toda la noche.</p></div></article>
         </div>
       </section>
 
@@ -277,7 +277,6 @@ function App() {
         <SectionTitle eyebrow="Nuestros juegos">Son sin límites de tiempo</SectionTitle>
         <p className="sectionIntro">
   Accede a toda nuestra ludoteca:<br />
-  • Por juego: 10 a 20 Bs (según el título)<br />
   • Pase libre: 10 Bs / persona (juega todo lo que quieras)<br />
   <strong>Paga por QR o efectivo en el local</strong>
 </p>
