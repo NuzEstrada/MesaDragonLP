@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const WHATSAPP_NUMBER = "59177172131";
+const WHATSAPP_NUMBER = "59176187558";
 const MAPS_URL = "https://maps.app.goo.gl/MJPkHdhoheGRVc2w5";
 const assetUrl = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
 
