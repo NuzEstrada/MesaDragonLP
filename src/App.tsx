@@ -77,6 +77,9 @@ const menuGroups = {
     ["Despertar del dragon", "Cafe expreso, leche espumada, leche condensada, chocolate y canela", "Bs 18", ""],
     ["Brasa cremosa", "Doradas, Cafe expreso, leche espumada y chocolate.", "Bs 10", ""],
   ],
+  "Sandwiches": [
+    ["NombrePlato", "Descripcion", "Precio", "Detalle (opcional)"],
+  ],
   "Otros": [
     ["Tostada flameante", "Pan molde, jamon, queso, salsa de la casa.", "Bs 12", ""],
     ["Escamas doradas", "Bowl de papas fritas al hilo.", "Bs 8", ""],
@@ -336,7 +339,7 @@ function App() {
         <div className="locationCard">
           <div className="mapPattern"><Icon name="map" size={42} /><span>Mesa Dragón</span></div>
           <div className="locationDetails">
-            <div><Icon name="clock" /><p><strong>Martes a domingo</strong><br />16:00–23:30<br /><small>Cerramos los lunes</small></p></div>
+            <div><Icon name="clock" /><p><strong>Martes a domingo</strong><br />16:00–23:00<br /><small>Cerramos los lunes</small></p></div>
             <div><Icon name="map" /><p><strong>Calle Colón</strong><br />entre Domingo Paz y Av. Potosí</p></div>
             <a className="button secondary" href={MAPS_URL} target="_blank" rel="noreferrer">Ver en Google Maps</a>
           </div>
