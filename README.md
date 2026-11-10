@@ -1,3 +1,13 @@
 # Sitio web móvil para café
 
 Este proyecto es una landing page o sitio web móvil para una cafetería, desarrollado con React + Vite + Tailwind CSS.
+
+## Google Analytics
+
+La app envía eventos a `dataLayer` mediante el contenedor de Google Tag Manager `GTM-K99HXZZ5`, configurado en `index.html`. Configura las etiquetas de medición necesarias desde ese contenedor en Google Tag Manager. Para enviar los eventos a GA4, vincula una etiqueta Google con el ID de medición GA4 de tu propiedad y una etiqueta de evento GA4 disparada por eventos personalizados que coincidan con:
+
+`^(traffic_source_details|button_click|link_click|section_view|section_engagement|booking_request_sent)$`
+
+En la etiqueta de evento, mapea los parámetros del data layer (`source_app`, `referrer_host`, `utm_source`, `utm_medium`, `utm_campaign`, `button_label`, `section_name`, `destination`, `engagement_seconds`, `people_count` y `selected_game_count`) según corresponda. En GA4, registra como dimensiones personalizadas los parámetros que quieras consultar; registra `engagement_seconds` como métrica personalizada para analizar el tiempo por sección. El tiempo se cuenta mientras la sección está visible y la pestaña está activa; el detalle de juegos y las categorías del menú se separan por nombre.
+
+La atribución también depende de la información disponible del navegador. Para identificar redes sociales que no envían referencia, agrega parámetros UTM a sus enlaces (por ejemplo, `utm_source=instagram&utm_medium=social&utm_campaign=perfil`). Los valores de campos de reserva, como nombre, teléfono y comentarios, no se envían a Analytics.

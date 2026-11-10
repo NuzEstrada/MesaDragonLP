@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { initializeAnalyticsTracking, trackBookingRequest } from "./analytics";
 
 const WHATSAPP_NUMBER = "59176187558";
 const MAPS_URL = "https://maps.app.goo.gl/MJPkHdhoheGRVc2w5";
@@ -164,6 +165,8 @@ function App() {
   const status = getOpenStatus();
   const genres = [...new Set(games.flatMap((game) => game.genres).filter((item) => !item.startsWith("[")))];
 
+  useEffect(() => initializeAnalyticsTracking(), []);
+
   useEffect(() => {
     const handleScroll = () => {
       const header = document.querySelector('.header');
@@ -305,7 +308,7 @@ function App() {
         </div>
       </section>
 
-      <section id="menu" className="section menuSection">
+      <section id="menu" data-analytics-section={`menu_${normalizeText(menuTab).replace(/\s+/g, "_")}`} className="section menuSection">
         <SectionTitle eyebrow="La cocina">Nuestro menú</SectionTitle>
         <p className="sectionIntro">Hecho para compartir sin abandonar la partida.</p>
         <div className="scrollChips">{(Object.keys(menuGroups) as (keyof typeof menuGroups)[]).map((tab) => <Chip key={tab} active={menuTab === tab} onClick={() => setMenuTab(tab)}>{tab}</Chip>)}</div>
@@ -315,7 +318,7 @@ function App() {
         <p className="allergy"><span>!</span> Consulta por alergias. Con gusto te ayudamos.</p>
       </section>
 
-      <section className="reviewsSection section" aria-label="Reseñas de Google Maps">
+      <section className="reviewsSection section" data-analytics-section="resenas" aria-label="Reseñas de Google Maps">
         <SectionTitle eyebrow="Reseñas de Google Maps">Lo que dicen nuestros aventureros</SectionTitle>
         <div className="googleRating" aria-label="Valoración de Google Maps: 4.8 de 5 estrellas">
           <span aria-hidden="true">⭐</span> 4.8 en Google Maps
@@ -372,7 +375,7 @@ function ReviewCard({ review }: { review: GoogleReview }) {
   </article>;
 }
 
-function ModalFrame({ children, onClose, className = "" }: { children: React.ReactNode; onClose: () => void; className?: string }) {
+function ModalFrame({ children, onClose, className = "", analyticsSection }: { children: React.ReactNode; onClose: () => void; className?: string; analyticsSection?: string }) {
   const pointerStart = useRef<{ pointerId: number; x: number; y: number } | null>(null);
   useEffect(() => {
     const close = (event: KeyboardEvent) => event.key === "Escape" && onClose();
@@ -395,12 +398,12 @@ function ModalFrame({ children, onClose, className = "" }: { children: React.Rea
     if (deltaY >= 100 && deltaY > deltaX * 1.2) onClose();
   };
   return <div className="modalBackdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-    <div className={`sheet ${className}`} role="dialog" aria-modal="true"><div className="sheetHandle" onPointerDown={startDrag} onPointerUp={finishDrag} onPointerCancel={() => { pointerStart.current = null; }} aria-label="Arrastra hacia abajo para cerrar" /><button className="closeButton" onClick={onClose} aria-label="Cerrar"><Icon name="close" /></button>{children}</div>
+    <div className={`sheet ${className}`} role="dialog" aria-modal="true" data-analytics-section={analyticsSection}><div className="sheetHandle" onPointerDown={startDrag} onPointerUp={finishDrag} onPointerCancel={() => { pointerStart.current = null; }} aria-label="Arrastra hacia abajo para cerrar" /><button className="closeButton" onClick={onClose} aria-label="Cerrar"><Icon name="close" /></button>{children}</div>
   </div>;
 }
 
 function GameSheet({ game, onClose, onBook }: { game: Game; onClose: () => void; onBook: () => void }) {
-  return <ModalFrame onClose={onClose} className="gameSheet">
+  return <ModalFrame onClose={onClose} className="gameSheet" analyticsSection={`juego_${normalizeText(game.name).replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "")}`}>
     <div className="sheetGameArt"><Star /></div><span className="eyebrow">Sobre el juego</span><h2>{game.name}</h2>
     <div className="detailGrid">
       <div><span>Dificultad</span><strong className={`difficulty ${difficultyClass[game.difficulty]}`}><i />{game.difficulty}</strong><small>{difficultyInfo[game.difficulty]}</small></div>
@@ -459,10 +462,11 @@ ${comments ? `  ${comments}` : "  [Sin comentarios]"}
 
 ¡Quedo a la espera de su confirmación! 🙌`;
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    trackBookingRequest(people, selectedGames.length);
     setSent(true);
   };
 
-  return <ModalFrame onClose={onClose} className="bookingSheet">
+  return <ModalFrame onClose={onClose} className="bookingSheet" analyticsSection="reserva">
     {sent ? <div className="successState"><Star /><span className="eyebrow">Solicitud enviada</span><h2>Listo, revisa WhatsApp para confirmar tu reserva</h2><div className="bookingSummary"><p><span>Nombre</span><strong>{name}</strong></p><p><span>Mesa</span><strong>{people} personas · {date} · {time}</strong></p><p><span>Juegos</span><strong>{selectedGames.join(", ") || "[por elegir]"}</strong></p></div><Button onClick={onClose}>Cerrar</Button></div> :
       <>
         <span className="eyebrow">Prepara la aventura</span><h2>Reserva tu mesa</h2><p className="sheetIntro">Completa los datos y te llevaremos a WhatsApp para confirmar.</p>
