@@ -2,6 +2,17 @@
 
 Este proyecto es una landing page o sitio web móvil para una cafetería, desarrollado con React + Vite + Tailwind CSS.
 
+## Menú y juegos desde Excel
+
+Sube los archivos `Menu.xlsx` y `Juegos.xlsx` a la carpeta `public/`. La página lee la primera hoja de cada archivo (o las hojas llamadas `MenuMesaDragon` y `Juegos`). Para actualizar el catálogo, reemplaza esos archivos y recarga la página. Al publicar cambios, incluye los Excel actualizados.
+
+Los encabezados son:
+
+- Menú: `category`, `name`, `description`, `price`, `detail`. La categoría crea cada pestaña del menú; `description`, `price` y `detail` pueden quedar vacíos.
+- Juegos: `name`, `image`, `minPlayers`, `maxPlayers`, `players`, `minMinutes`, `maxMinutes`, `time`, `difficulty`, `genres`, `age`, `description`. `minPlayers`, `maxPlayers`, `minMinutes` y `maxMinutes` aceptan celdas vacías; escribe los géneros separados por comas. `image` debe ser la ruta de una imagen dentro de `public` (por ejemplo, `/juegos/catan.jpg`) o quedar vacía.
+
+Las dificultades admitidas son `Fácil`, `Medio`, `Medio-difícil`, `Difícil` y `[por confirmar]`. Si faltan encabezados o datos obligatorios, la página muestra el error en la sección correspondiente.
+
 ## Google Analytics
 
 La app envía eventos a `dataLayer` mediante el contenedor de Google Tag Manager `GTM-K99HXZZ5`, configurado en `index.html`. Configura las etiquetas de medición necesarias desde ese contenedor en Google Tag Manager. Para enviar los eventos a GA4, vincula una etiqueta Google con el ID de medición GA4 de tu propiedad y una etiqueta de evento GA4 disparada por eventos personalizados que coincidan con:

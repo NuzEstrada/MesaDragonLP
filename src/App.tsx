@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { initializeAnalyticsTracking, trackBookingRequest } from "./analytics";
+import { loadCatalog, type Difficulty, type Game, type MenuItem } from "./catalog";
 
 const WHATSAPP_NUMBER = "59176187558";
 const MAPS_URL = "https://maps.app.goo.gl/MJPkHdhoheGRVc2w5";
+const CATALOG_ERROR_MESSAGE = "Ocurrió algo mal.";
 const assetUrl = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
 
 const HERO_IMAGES = [
@@ -30,61 +32,6 @@ const SOCIAL_URLS = {
   Facebook: "https://www.facebook.com/share/1Fre4ENvcF/",
   Comunidades: "https://chat.whatsapp.com/C9f2ZhHgXFL1rg8Sihe8ih",
 };
-
-type Difficulty = "Fácil" | "Medio" | "Medio-difícil" | "Difícil" | "[por confirmar]";
-type Game = {
-  name: string;
-  image: string;
-  minPlayers: number | null;
-  maxPlayers: number | null;
-  players: string;
-  minMinutes: number | null;
-  maxMinutes: number | null;
-  time: string;
-  difficulty: Difficulty;
-  genres: string[];
-  age: string;
-  description: string;
-};
-
-const games: Game[] = ([
-  { name: "Catán", image: "/juegos/catan.jpg", minPlayers: 3, maxPlayers: 4, players: "3–4", minMinutes: 60, maxMinutes: 120, time: "60–120 min", difficulty: "Medio", genres: ["Estrategia", "Comercio"], age: "10+", description: "Construye caminos, negocia recursos y haz crecer tus poblados en una isla que cambia en cada partida." },
-  { name: "Architects of the West Kingdom", image: "/juegos/Architects of the West Kingdom.jpg", minPlayers: 1, maxPlayers: 5, players: "1–5", minMinutes: 60, maxMinutes: 80, time: "60–80 min", difficulty: "Medio", genres: ["Estrategia", "Historia"], age: "12+", description: "Reúne materiales, contrata aprendices y compite por convertirte en el arquitecto más reconocido del reino." },
-  { name: "¿Adivina quién?", image: "/juegos/Adivinaquién.jpg", minPlayers: 2, maxPlayers: 2, players: "2", minMinutes: 15, maxMinutes: 20, time: "15–20 min", difficulty: "Fácil", genres: ["Deducción", "Familiar"], age: "6+", description: "Haz preguntas inteligentes y descubre antes que tu rival el personaje secreto." },
-  { name: "Bamboo", image: "/juegos/Bamboo.jpg", minPlayers: 2, maxPlayers: 4, players: "2-4", minMinutes: 90, maxMinutes: 110, time: "90–110 min", difficulty: "Medio", genres: ["Estrategia"], age: "14+", description: "Reúne materiales, contrata aprendices y compite por convertirte en el arquitecto más reconocido del reino." },
-  { name: "Codenames", image: "/juegos/Codenames.jpg", minPlayers: 2, maxPlayers: 8, players: "2–8", minMinutes: 15, maxMinutes: 15, time: "15 min", difficulty: "Fácil", genres: ["Fiesta", "Deducción"], age: "10+", description: "Conecta palabras con pistas de una sola palabra y ayuda a tu equipo a encontrar a sus agentes." },
-  { name: "7 Wonders", image: "/juegos/7Wonders.jpg", minPlayers: 2, maxPlayers: 7, players: "2–7", minMinutes: 30, maxMinutes: 30, time: "30 min", difficulty: "Medio", genres: ["Cartas", "Historia"], age: "10+", description: "Desarrolla una civilización, levanta una maravilla y deja tu huella a través de tres eras." },
-  { name: "Scythe", image: "/juegos/Scythe.jpg", minPlayers: 1, maxPlayers: 5, players: "1–5", minMinutes: 90, maxMinutes: 115, time: "90–115 min", difficulty: "Medio-difícil", genres: ["Estrategia", "Aventura"], age: "14+", description: "Lidera una facción en una Europa alternativa y equilibra expansión, producción y poder militar." },
-  { name: "Gloomhaven", image: "/juegos/Gloomhaven.jpg", minPlayers: 1, maxPlayers: 4, players: "1–4", minMinutes: 60, maxMinutes: 120, time: "60–120 min", difficulty: "Difícil", genres: ["Cooperativo", "Aventura", "Rol"], age: "14+", description: "Una campaña cooperativa de decisiones, combates tácticos y personajes que evolucionan." },
-  { name: "Dungeons & Dragons (campaña)", image:"/juegos/Dungeons&Dragons.jpg",minPlayers: 3, maxPlayers: 6, players: "3–6", minMinutes: 180, maxMinutes: 240, time: "180–240 min", difficulty: "Difícil", genres: ["Rol", "Aventura"], age: "12+", description: "Crea un personaje y vive una historia compartida donde cada decisión puede cambiar la aventura." },
-] satisfies Game[]).map((game) => ({ ...game, image: assetUrl(game.image) }));
-
-const menuGroups = {
-  "Pizzas": [
-    ["Draco clasica", "Masa artesanal, salsa, queso, jamon.", "Bs 50", "Sin gluten"],
-    ["La escama solar", "Masa artesanal, salsa, queso, jamon, choclo.", "Bs 50", "Sin gluten"],
-    ["Fuego tropical", "Masa artesanal, salsa, queso, jamon, piña.", "Bs 55", "Sin gluten"],
-  ],
-  "Bebidas": [
-    ["Elixir de dragon", "Jarra 1 lt.", "Bs 10", "Azucar natural"],
-    ["Brasa burbujeante", "Gaseosa personal (190ml).", "Bs 3", "Con azucar"],
-  ],
-  "Frappes": [
-    ["Brasa gelida", "Cafe, leche, hielo, crema de leche, cobertura de chocolate.", "Bs 18", ""],
-    ["Colmillo escarchado", "Cafe, leche hielo, leche condensada, crema de leche, cobertura de chocolate.", "Bs 20", ""],
-  ],
-  "Cafes": [
-    ["Despertar del dragon", "Cafe expreso, leche espumada, leche condensada, chocolate y canela", "Bs 18", ""],
-    ["Brasa cremosa", "Doradas, Cafe expreso, leche espumada y chocolate.", "Bs 10", ""],
-  ],
-  "Sandwiches": [
-    ["NombrePlato", "Descripcion", "Precio", "Detalle (opcional)"],
-  ],
-  "Otros": [
-    ["Tostada flameante", "Pan molde, jamon, queso, salsa de la casa.", "Bs 12", ""],
-    ["Escamas doradas", "Bowl de papas fritas al hilo.", "Bs 8", ""],
-  ],
-} as const;
 
 const difficultyInfo: Record<Difficulty, string> = {
   Fácil: "5 min de explicación",
@@ -163,12 +110,48 @@ function App() {
   const [players, setPlayers] = useState("Todos");
   const [duration, setDuration] = useState("Todas");
   const [genre, setGenre] = useState("Todos");
-  const [menuTab, setMenuTab] = useState<keyof typeof menuGroups>("Pizzas");
+  const [games, setGames] = useState<Game[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [gamesError, setGamesError] = useState(false);
+  const [menuError, setMenuError] = useState(false);
+  const [catalogLoading, setCatalogLoading] = useState(true);
+  const [menuTab, setMenuTab] = useState("Pizzas");
   const [heroImageIndex, setHeroImageIndex] = useState(0);
   const status = getOpenStatus();
+  const menuCategories = useMemo(() => [...new Set(menuItems.map((item) => item.category))], [menuItems]);
   const genres = [...new Set(games.flatMap((game) => game.genres).filter((item) => !item.startsWith("[")))];
 
   useEffect(() => initializeAnalyticsTracking(), []);
+
+  useEffect(() => {
+    let active = true;
+    loadCatalog(import.meta.env.BASE_URL)
+      .then(({ games: catalogGames, gamesError: gameLoadError, menu, menuError: menuLoadError }) => {
+        if (!active) return;
+        if (catalogGames) {
+          setGames(catalogGames);
+        } else {
+          console.error("No se pudo leer el archivo de juegos Juegos.xlsx.", gameLoadError);
+          setGamesError(true);
+        }
+        if (menu) {
+          setMenuItems(menu);
+          setMenuTab((current) => menu.some((item) => item.category === current) ? current : menu[0].category);
+        } else {
+          console.error("No se pudo leer el archivo del menú Menu.xlsx.", menuLoadError);
+          setMenuError(true);
+        }
+        setCatalogLoading(false);
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        console.error("No se pudo cargar el catálogo de Excel.", error);
+        setGamesError(true);
+        setMenuError(true);
+        setCatalogLoading(false);
+      });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -215,7 +198,7 @@ function App() {
     ));
     const matchesGenre = genre === "Todos" || game.genres.includes(genre);
     return matchesQuery && matchesDifficulty && matchesPlayers && matchesDuration && matchesGenre;
-  }), [query, difficulty, players, duration, genre]);
+  }), [games, query, difficulty, players, duration, genre]);
 
   const openBooking = (game?: string) => {
     if (game) setBookingGame((current) => current.includes(game) ? current : [...current, game].slice(0, 3));
@@ -257,7 +240,7 @@ function App() {
             key={image}
             aria-hidden="true"
           />)}
-          <div className="heroLogo"><img src={assetUrl("/logoMD.png")} alt="Logo Mesa Dragón" className="dragonMarkImage" /><Brand /></div>
+          <div className="heroLogo"><img src={assetUrl("/LOGISTICA.png")} alt="Logo Mesa Dragón" className="dragonMarkImage" /></div>
           <span className={`status ${status.open ? "isOpen" : ""}`}><i />{status.label}</span>
         </div>
         <div className="heroContent">
@@ -276,6 +259,7 @@ function App() {
           <article><div className="featureIcon"><Icon name="book" size={26} /></div><div><h3>Te enseñamos a jugar</h3><p>Nuestros escuderos te enseñan las reglas para que solo tengas que disfrutar.</p></div></article>
           <article><div className="featureIcon"><Icon name="users" size={26} /></div><div><h3>Para grupos de dos o más personas</h3><p>Parejas, familia o amigos: preparamos la mesa para tu grupo.</p></div></article>
           <article><div className="featureIcon"><Icon name="clock" size={26} /></div><div><h3>Rápidas, estratégicas o largas</h3><p>Desde partidas de 15 minutos hasta estrategia compleja para toda la noche.</p></div></article>
+          <article><div className="featureIcon"><Icon name="dice" size={26} /></div><div><h3>Juegos y campañas de rol</h3><p>Grupos de 3 a 5 personas, consulta por nuestras mesas o campañas disponibles.</p></div></article>
         </div>
       </section>
 
@@ -286,16 +270,18 @@ function App() {
   • Pase libre: 10 Bs / persona (juega todo lo que quieras)<br />
   <strong>Paga por QR o efectivo en el local</strong>
 </p>
-        <label className="search"><Icon name="search" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre..." /></label>
+        
         <Filter label="Dificultad" options={["Todos", "Fácil", "Medio", "Medio-difícil", "Difícil"]} value={difficulty} onChange={setDifficulty} />
         <Filter label="Jugadores" options={["Todos", "1–4", "5–8", "9–12"]} value={players} onChange={setPlayers} />
+        <span>ㅤ</span>
+        <label className="search"><Icon name="search" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre..." /></label>
         
         <div className="resultCount"><span>{filteredGames.length} {filteredGames.length === 1 ? "juego" : "juegos"}</span><i /></div>
         <div className="gameList">
-          {filteredGames.map((game) => <button type="button" className="gameCard" key={game.name} onClick={() => setSelectedGame(game)}>
+          {gamesError ? <p className="catalogError" role="alert">{CATALOG_ERROR_MESSAGE}</p> : catalogLoading ? <p role="status">Cargando juegos...</p> : filteredGames.map((game) => <button type="button" className="gameCard" key={game.name} onClick={() => setSelectedGame(game)}>
             <div className="gameArt">
               {game.image ? (
-                <img src={game.image} alt={game.name} className="gameThumb" />
+                <img src={assetUrl(game.image)} alt={game.name} className="gameThumb" />
               ) : (
               <Star />
               )}
@@ -314,10 +300,12 @@ function App() {
       <section id="menu" data-analytics-section={`menu_${normalizeText(menuTab).replace(/\s+/g, "_")}`} className="section menuSection">
         <SectionTitle eyebrow="La cocina">Nuestro menú</SectionTitle>
         <p className="sectionIntro">Hecho para compartir sin abandonar la partida.</p>
-        <div className="scrollChips">{(Object.keys(menuGroups) as (keyof typeof menuGroups)[]).map((tab) => <Chip key={tab} active={menuTab === tab} onClick={() => setMenuTab(tab)}>{tab}</Chip>)}</div>
-        <div className="menuList">{menuGroups[menuTab].map(([name, description, price, tag]) => <article className="menuCard" key={name}>
-          <div className="menuCopy"><h3>{name}</h3><p>{description}</p>{tag && <span className="foodTag">{tag}</span>}</div><strong>{price}</strong>
-        </article>)}</div>
+        <div className="scrollChips">{menuCategories.map((tab) => <Chip key={tab} active={menuTab === tab} onClick={() => setMenuTab(tab)}>{tab}</Chip>)}</div>
+        <div className="menuList">
+          {menuError ? <p className="catalogError" role="alert">{CATALOG_ERROR_MESSAGE}</p> : catalogLoading ? <p role="status">Cargando menú...</p> : menuItems.filter((item) => item.category === menuTab).map(({ name, description, price, detail }, index) => <article className="menuCard" key={`${menuTab}-${name}-${detail}-${price}-${index}`}>
+            <div className="menuCopy"><h3>{name}</h3><p>{description}</p>{detail && <span className="foodTag">{detail}</span>}</div><strong>{price}</strong>
+          </article>)}
+        </div>
         <p className="allergy"><span>!</span> Consulta por alergias. Con gusto te ayudamos.</p>
       </section>
 
