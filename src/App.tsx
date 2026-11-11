@@ -341,7 +341,7 @@ function App() {
     <footer><Star /><strong>Mesa Dragón</strong><span>Café lúdico</span><p>© 2026 Todos los derechos reservados.</p></footer>
 
     {selectedGame && <GameSheet game={selectedGame} onClose={() => setSelectedGame(null)} onBook={() => openBooking(selectedGame.name)} />}
-    {bookingOpen && <BookingSheet selectedGames={bookingGame} setSelectedGames={setBookingGame} onClose={closeBooking} />}
+    {bookingOpen && <BookingSheet games={games} selectedGames={bookingGame} setSelectedGames={setBookingGame} onClose={closeBooking} />}
   </div>;
 }
 
@@ -408,7 +408,7 @@ function GameSheet({ game, onClose, onBook }: { game: Game; onClose: () => void;
   </ModalFrame>;
 }
 
-function BookingSheet({ selectedGames, setSelectedGames, onClose }: { selectedGames: string[]; setSelectedGames: React.Dispatch<React.SetStateAction<string[]>>; onClose: () => void }) {
+function BookingSheet({ games, selectedGames, setSelectedGames, onClose }: { games: Game[]; selectedGames: string[]; setSelectedGames: React.Dispatch<React.SetStateAction<string[]>>; onClose: () => void }) {
   const today = new Date();
   const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split("T")[0];
   const [name, setName] = useState("");
