@@ -462,16 +462,26 @@ ${comments ? `  ${comments}` : "  [Sin comentarios]"}
       <>
         <span className="eyebrow">Prepara la aventura</span><h2>Reserva tu mesa</h2><p className="sheetIntro">Completa los datos y te llevaremos a WhatsApp para confirmar.</p>
         <div className="formGrid">
-          <label><span>Nombre *</span><input value={name} onChange={(event) => setName(event.target.value)} placeholder="Tu nombre" /></label>
+          <label><span>Nombre:</span><input value={name} onChange={(event) => setName(event.target.value)} placeholder="Tu nombre" /></label>
           
-          <div className="peopleField"><span>Personas *</span><div><button onClick={() => setPeople(Math.max(2, people - 1))} disabled={people === 2} aria-label="Quitar una persona">−</button><strong>{people}<small>{people >= 9 ? " grupo" : ""}</small></strong><button onClick={() => setPeople(Math.min(12, people + 1))} disabled={people === 12} aria-label="Añadir una persona">+</button></div></div>
-          <label><span>Fecha *</span><input type="date" min={localToday} value={date} onChange={(event) => handleDate(event.target.value)} />{dateError && <small className="error">{dateError}</small>}</label>
+          <div className="peopleField"><span>Personas:</span><div><button onClick={() => setPeople(Math.max(2, people - 1))} disabled={people === 2} aria-label="Quitar una persona">−</button><strong>{people}<small>{people >= 9 ? " grupo" : ""}</small></strong><button onClick={() => setPeople(Math.min(12, people + 1))} disabled={people === 12} aria-label="Añadir una persona">+</button></div></div>
+          <label><span>Fecha:</span><input className="bookingDateInput" type="date" min={localToday} value={date} onChange={(event) => handleDate(event.target.value)} />{dateError && <small className="error">{dateError}</small>}</label>
         </div>
-        <div className="bookingBlock"><span>Hora *</span><div className="timeChips">{["16:00", "17:30", "19:00", "20:30"].map((item) => <Chip active={time === item} onClick={() => handleTime(item)} key={item}>{item} hs</Chip>)}</div><label className="customTime"><span>O elige otra hora</span><input className="bookingTimeInput" type="time" min="16:00" max="23:00" value={time} onChange={(event) => handleTime(event.target.value)} aria-describedby={timeError ? "booking-time-error" : undefined} /></label>{timeError && <small id="booking-time-error" className="error">{timeError}</small>}</div>
-        <div className="bookingBlock"><span>Juegos para tu mesa <small>(opcional, hasta 3)</small></span><label className="bookingSearchLabel" htmlFor="booking-game-search">Busca tu juego</label><label className="search bookingGameSearch"><Icon name="search" /><input id="booking-game-search" value={gameQuery} onChange={(event) => setGameQuery(event.target.value)} placeholder="Buscar un juego..." /></label><div className="gameSelect">{bookingGames.map((game) => <Chip key={game.name} active={selectedGames.includes(game.name)} onClick={() => toggleGame(game.name)} className={!selectedGames.includes(game.name) && selectedGames.length >= 3 ? "limitReached" : ""}>{game.name}</Chip>)}{!bookingGames.length && <p className="gameSearchEmpty">No encontramos juegos con ese nombre.</p>}</div></div>
-        <label><span>Comentarios <small>(opcional)</small></span><textarea value={comments} onChange={(event) => setComments(event.target.value)} placeholder="Cumpleaños, accesibilidad, juego favorito..." rows={3} /></label>
+        <div className="bookingBlock">
+          <span>Hora:</span>
+          <div className="timeChips">{["16:00", "17:30", "19:00", "20:30"].map((item) => 
+            <Chip className="reservas" active={time === item} onClick={() => handleTime(item)} key={item}>{item} hs</Chip>)}
+            </div>
+              <label className="customTime">
+                <span>O elige otra hora</span>
+                <input className="bookingTimeInput" type="time" min="16:00" max="23:00" value={time} onChange={(event) => handleTime(event.target.value)} aria-describedby={timeError ? "booking-time-error" : undefined} />
+              </label>{timeError && <small id="booking-time-error" className="error">{timeError}</small>}
+            </div>
+
+        <div className="bookingBlock"><span>Juegos para tu mesa <small className="optional">(opcional, hasta 3)</small></span><label className="bookingSearchLabel" htmlFor="booking-game-search">Busca tu juego</label><label className="search bookingGameSearch"><Icon name="search" /><input id="booking-game-search" value={gameQuery} onChange={(event) => setGameQuery(event.target.value)} placeholder="Buscar un juego..." /></label><div className="gameSelect">{bookingGames.map((game) => <Chip key={game.name} active={selectedGames.includes(game.name)} onClick={() => toggleGame(game.name)} className={`reservas ${!selectedGames.includes(game.name) && selectedGames.length >= 3 ? "limitReached" : ""}`}>{game.name}</Chip>)}{!bookingGames.length && <p className="gameSearchEmpty">No encontramos juegos con ese nombre.</p>}</div></div>
+        <label><span>Comentarios <small className="optional">(opcional)</small></span><textarea value={comments} onChange={(event) => setComments(event.target.value)} placeholder="Cumpleaños, accesibilidad, juego favorito..." rows={3} /></label>
         <div className="bookingSummary"><p><span>Tu mesa</span><strong>{people} personas{date ? ` · ${date}` : ""}{time ? ` · ${time}` : ""}</strong></p><p><span>Juegos</span><strong>{selectedGames.join(", ") || "[por elegir]"}</strong></p></div>
-        <Button onClick={submit} disabled={!valid}>Enviar solicitud por WhatsApp</Button>
+        <Button onClick={submit} disabled={!valid} className="reservas">Enviar solicitud por WhatsApp</Button>
         {!valid && <p className="requiredNote">Completa nombre, fecha y hora para continuar.</p>}
         <p className="bookingTerms">💡 La confirmación se realiza por WhatsApp y el pago se efectúa directamente en el local  (QR y/o efectivo).</p>
       </>}
